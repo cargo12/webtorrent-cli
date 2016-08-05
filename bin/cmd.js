@@ -600,7 +600,7 @@ function gracefulExit () {
     if (err) return fatalError(err)
 
     // Quit after 1 second. This is only necessary for `webtorrent-hybrid` since
-    // the `wrtc` package makes node never quit :(
+    // the `electron-webrtc` keeps the node process alive quit.
     unref(setTimeout(function () { process.exit(0) }, 1000))
   })
 }
