@@ -50,7 +50,7 @@
   "optionalDependencies": {
     "airplay-js": "^0.2.3",
     "chromecasts": "^1.5.3",
-    "nodebmc": "0.0.6"
+    "nodebmc": "0.0.7"
   },
   "preferGlobal": true,
   "repository": {
