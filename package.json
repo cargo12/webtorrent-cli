@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "cross-spawn-async": "^2.1.9",
-    "standard": "^6.0.8",
+    "standard": "^7.1.2",
     "tape": "^4.5.1",
     "webtorrent-fixtures": "^1.2.0",
     "xtend": "^4.0.1"
