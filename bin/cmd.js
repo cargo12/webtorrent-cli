@@ -93,10 +93,10 @@ var MPV_EXEC = 'mpv --ontop --really-quiet --loop=no'
 var OMX_EXEC = 'omxplayer -r -o ' + (typeof argv.omx === 'string' ? argv.omx : 'hdmi')
 
 if (argv.subtitles) {
-  VLC_ARGS += ' --sub-file=' + argv.subtitles
-  MPLAYER_EXEC += ' -sub ' + argv.subtitles
-  MPV_EXEC += ' --sub-file=' + argv.subtitles
-  OMX_EXEC += ' --subtitles ' + argv.subtitles
+  VLC_ARGS += ' --sub-file=' + JSON.stringify(argv.subtitles)
+  MPLAYER_EXEC += ' -sub ' + JSON.stringify(argv.subtitles)
+  MPV_EXEC += ' --sub-file=' + JSON.stringify(argv.subtitles)
+  OMX_EXEC += ' --subtitles ' + JSON.stringify(argv.subtitles)
 }
 
 function checkPermission (filename) {
