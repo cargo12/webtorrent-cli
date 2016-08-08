@@ -379,11 +379,15 @@ function runDownload (torrentId) {
           unref(cp.execFile(cmd, args, function (err) {
             if (err) return fatalError(err)
             torrentDone()
+          }).on('exit', function () {
+            process.exit(0)
           }))
         } else {
           unref(cp.exec(cmd + ' ' + href + ' ' + VLC_ARGS, function (err) {
             if (err) return fatalError(err)
             torrentDone()
+          }).on('exit', function () {
+            process.exit(0)
           }))
         }
       })
@@ -399,6 +403,8 @@ function runDownload (torrentId) {
       unref(cp.exec(cmd, function (err) {
         if (err) return fatalError(err)
         torrentDone()
+      }).on('exit', function () {
+        process.exit(0)
       }))
     }
 
