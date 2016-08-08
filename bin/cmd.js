@@ -154,9 +154,8 @@ if (['info', 'create', 'download', 'add', 'seed'].indexOf(command) !== -1 && arg
 function runVersion () {
   console.log(
     require('../package.json').version +
-    ' (webtorrent ' + require('webtorrent/package.json').version + ')'
+    ' (' + require('webtorrent/package.json').version + ')'
   )
-  process.exit(0)
 }
 
 function runHelp () {
@@ -214,7 +213,6 @@ Options (advanced):
 
   */
   }.toString().split(/\n/).slice(2, -2).join('\n'))
-  process.exit(0)
 }
 
 function runInfo (torrentId) {
@@ -350,7 +348,7 @@ function runDownload (torrentId) {
       })
       clivas.line('\nTo select a specific file, re-run `webtorrent` with "--select [index]"')
       clivas.line('Example: webtorrent download "magnet:..." --select 0')
-      process.exit(0)
+      return gracefulExit()
     }
 
     // if no index specified, use largest file
@@ -588,11 +586,12 @@ function errorAndExit (err) {
 function gracefulExit () {
   process.removeListener('SIGINT', gracefulExit)
   process.removeListener('SIGTERM', gracefulExit)
-  clearInterval(drawInterval)
+
+  if (!client) return
 
   clivas.line('\n{green:webtorrent is exiting...}')
 
-  if (!client) return
+  clearInterval(drawInterval)
 
   if (argv['on-exit']) unref(cp.exec(argv['on-exit']))
 
