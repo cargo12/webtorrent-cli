@@ -89,6 +89,7 @@ There are many supported streaming options:
 ```bash
 --airplay               Apple TV
 --chromecast            Chromecast
+--dlna                  DLNA
 --mplayer               MPlayer
 --mpv                   MPV
 --omx [jack]            omx [default: hdmi]
