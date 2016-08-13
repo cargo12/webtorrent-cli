@@ -5,6 +5,7 @@ var cp = require('child_process')
 var createTorrent = require('create-torrent')
 var executable = require('executable')
 var fs = require('fs')
+var mime = require('mime')
 var minimist = require('minimist')
 var moment = require('moment')
 var networkAddress = require('network-address')
@@ -435,7 +436,10 @@ function runDownload (torrentId) {
     if (argv.dlna) {
       var dlnacasts = require('dlnacasts')()
       dlnacasts.on('update', function (player) {
-        player.play(href, {title: torrent.files[index].name})
+        player.play(href, {
+          title: torrent.files[index].name,
+          type: mime.lookup(torrent.files[index].name)
+        })
       })
     }
 
