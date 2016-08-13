@@ -121,11 +121,12 @@ if (argv['on-exit']) {
 
 playerName = argv.airplay ? 'Airplay'
   : argv.chromecast ? 'Chromecast'
-  : argv.xbmc ? 'XBMC'
-  : argv.vlc ? 'VLC'
+  : argv.dlna ? 'DLNA'
   : argv.mplayer ? 'MPlayer'
   : argv.mpv ? 'mpv'
   : argv.omx ? 'OMXPlayer'
+  : argv.vlc ? 'VLC'
+  : argv.xbmc ? 'XBMC'
   : null
 
 var command = argv._[0]
@@ -188,6 +189,7 @@ Specify <torrent-id> as one of:
 Options (streaming):
     --airplay               Apple TV
     --chromecast            Chromecast
+    --dlna                  DLNA
     --mplayer               MPlayer
     --mpv                   MPV
     --omx [jack]            omx [default: hdmi]
@@ -361,7 +363,7 @@ function runDownload (torrentId) {
   }
 
   function onSelection (index) {
-    href = (argv.airplay || argv.chromecast || argv.xbmc)
+    href = (argv.airplay || argv.chromecast || argv.xbmc || argv.dlna)
       ? 'http://' + networkAddress() + ':' + server.address().port + '/' + index
       : 'http://localhost:' + server.address().port + '/' + index
 
@@ -428,6 +430,13 @@ function runDownload (torrentId) {
         .on('deviceOn', function (device) {
           device.play(href, function () {})
         })
+    }
+
+    if (argv.dlna) {
+      var dlnacasts = require('dlnacasts')()
+      dlnacasts.on('update', function (player) {
+        player.play(href, {title: torrent.files[index].name})
+      })
     }
 
     drawTorrent(torrent)
