@@ -3,8 +3,10 @@
 var clivas = require('clivas')
 var cp = require('child_process')
 var createTorrent = require('create-torrent')
+var ecstatic = require('ecstatic')
 var executable = require('executable')
 var fs = require('fs')
+var http = require('http')
 var mime = require('mime')
 var minimist = require('minimist')
 var moment = require('moment')
@@ -98,6 +100,13 @@ if (argv.subtitles) {
   MPLAYER_EXEC += ' -sub ' + JSON.stringify(argv.subtitles)
   MPV_EXEC += ' --sub-file=' + JSON.stringify(argv.subtitles)
   OMX_EXEC += ' --subtitles ' + JSON.stringify(argv.subtitles)
+
+  var subtitlesServer = http.createServer(
+    ecstatic({
+      root: path.dirname(argv.subtitles),
+      showDir: false
+    })
+  )
 }
 
 function checkPermission (filename) {
@@ -436,10 +445,20 @@ function runDownload (torrentId) {
     if (argv.dlna) {
       var dlnacasts = require('dlnacasts')()
       dlnacasts.on('update', function (player) {
-        player.play(href, {
-          title: 'WebTorrent - ' + torrent.files[index].name,
-          type: mime.lookup(torrent.files[index].name)
-        })
+        if (argv.subtitles) {
+          subtitlesServer.listen(0, function () {
+            player.play(href, {
+              title: 'WebTorrent - ' + torrent.files[index].name,
+              type: mime.lookup(torrent.files[index].name),
+              subtitles: ['http://' + networkAddress() + ':' + subtitlesServer.address().port + '/' + encodeURIComponent(path.basename(argv.subtitles))]
+            })
+          })
+        } else {
+          player.play(href, {
+            title: 'WebTorrent - ' + torrent.files[index].name,
+            type: mime.lookup(torrent.files[index].name)
+          })
+        }
       })
     }
 
@@ -601,6 +620,10 @@ function gracefulExit () {
   process.removeListener('SIGTERM', gracefulExit)
 
   if (!client) return
+
+  if (subtitlesServer) {
+    subtitlesServer.close()
+  }
 
   clivas.line('\n{green:webtorrent is exiting...}')
 
