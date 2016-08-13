@@ -416,7 +416,7 @@ function runDownload (torrentId) {
       var chromecasts = require('chromecasts')()
       chromecasts.on('update', function (player) {
         player.play(href, {
-          title: torrent.name
+          title: 'WebTorrent - ' + torrent.files[index].name
         })
         player.on('error', function (err) {
           err.message = 'Chromecast: ' + err.message
@@ -437,7 +437,7 @@ function runDownload (torrentId) {
       var dlnacasts = require('dlnacasts')()
       dlnacasts.on('update', function (player) {
         player.play(href, {
-          title: torrent.files[index].name,
+          title: 'WebTorrent - ' + torrent.files[index].name,
           type: mime.lookup(torrent.files[index].name)
         })
       })
