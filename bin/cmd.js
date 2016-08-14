@@ -95,13 +95,14 @@ var MPLAYER_EXEC = 'mplayer -ontop -really-quiet -noidx -loop 0'
 var MPV_EXEC = 'mpv --ontop --really-quiet --loop=no'
 var OMX_EXEC = 'lxterminal -e omxplayer -r -o ' + (typeof argv.omx === 'string' ? argv.omx : 'hdmi')
 
+var subtitlesServer
 if (argv.subtitles) {
   VLC_ARGS += ' --sub-file=' + JSON.stringify(argv.subtitles)
   MPLAYER_EXEC += ' -sub ' + JSON.stringify(argv.subtitles)
   MPV_EXEC += ' --sub-file=' + JSON.stringify(argv.subtitles)
   OMX_EXEC += ' --subtitles ' + JSON.stringify(argv.subtitles)
 
-  var subtitlesServer = http.createServer(
+  subtitlesServer = http.createServer(
     ecstatic({
       root: path.dirname(argv.subtitles),
       showDir: false
@@ -445,19 +446,26 @@ function runDownload (torrentId) {
     if (argv.dlna) {
       var dlnacasts = require('dlnacasts')()
       dlnacasts.on('update', function (player) {
+        var opts = {
+          title: 'WebTorrent - ' + torrent.files[index].name,
+          type: mime.lookup(torrent.files[index].name)
+        }
+
         if (argv.subtitles) {
           subtitlesServer.listen(0, function () {
-            player.play(href, {
-              title: 'WebTorrent - ' + torrent.files[index].name,
-              type: mime.lookup(torrent.files[index].name),
-              subtitles: ['http://' + networkAddress() + ':' + subtitlesServer.address().port + '/' + encodeURIComponent(path.basename(argv.subtitles))]
-            })
+            opts.subtitles = [
+              'http://' + networkAddress() + ':' +
+              subtitlesServer.address().port + '/' +
+              encodeURIComponent(path.basename(argv.subtitles))
+            ]
+            play()
           })
         } else {
-          player.play(href, {
-            title: 'WebTorrent - ' + torrent.files[index].name,
-            type: mime.lookup(torrent.files[index].name)
-          })
+          play()
+        }
+
+        function play () {
+          player.play(href, opts)
         }
       })
     }
