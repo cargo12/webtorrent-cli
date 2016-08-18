@@ -70,6 +70,51 @@ npm install webtorrent-cli -g
 
 ```bash
 $ webtorrent --help
+
+Usage:
+    webtorrent [command] <torrent-id> <options>
+
+Example:
+    webtorrent download "magnet:..." --vlc
+
+Commands:
+    download <torrent-id>   Download a torrent
+    seed <file/folder>      Seed a file or folder
+    create <file>           Create a .torrent file
+    info <torrent-id>       Show info for a .torrent file or magnet uri
+
+Specify <torrent-id> as one of:
+    * magnet uri
+    * http url to .torrent file
+    * filesystem path to .torrent file
+    * info hash (hex string)
+
+Options (streaming):
+    --airplay               Apple TV
+    --chromecast            Chromecast
+    --dlna                  DLNA
+    --mplayer               MPlayer
+    --mpv                   MPV
+    --omx [jack]            omx [default: hdmi]
+    --vlc                   VLC
+    --xbmc                  XBMC
+    --stdout                standard out (implies --quiet)
+
+Options (simple):
+    -o, --out [path]        set download destination [default: current directory]
+    -s, --select [index]    select specific file in torrent (omit index for file list)
+    -t, --subtitles [path]  load subtitles file
+    -v, --version           print the current version
+
+Options (advanced):
+    -p, --port [number]     change the http server port [default: 8000]
+    -b, --blocklist [path]  load blocklist file/http url
+    -a, --announce [url]    tracker URL to announce to
+    -q, --quiet             don't show UI on stdout
+    --keep-seeding          don't quit when done downloading
+    --on-done [script]      run script after torrent download is done
+    --on-exit [script]      run script before program exit
+    --verbose               show torrent protocol details
 ```
 
 To download a torrent:
@@ -82,20 +127,6 @@ To stream a torrent to a device like **AirPlay** or **Chromecast**, just pass a 
 
 ```bash
 $ webtorrent magnet_uri --airplay
-```
-
-There are many supported streaming options:
-
-```bash
---airplay               Apple TV
---chromecast            Chromecast
---dlna                  DLNA
---mplayer               MPlayer
---mpv                   MPV
---omx [jack]            omx [default: hdmi]
---vlc                   VLC
---xbmc                  XBMC
---stdout                standard out [implies --quiet]
 ```
 
 In addition to magnet uris, webtorrent supports many ways to specify a torrent:
