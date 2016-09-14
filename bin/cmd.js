@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict'
 
 var clivas = require('clivas')
 var cp = require('child_process')
@@ -79,6 +80,9 @@ var argv = minimist(process.argv.slice(2), {
 })
 
 if (process.env.DEBUG || argv.stdout) {
+  enableQuiet()
+}
+function enableQuiet () {
   argv.quiet = argv.q = true
 }
 
@@ -142,25 +146,66 @@ playerName = argv.airplay ? 'Airplay'
 
 var command = argv._[0]
 
-if (['info', 'create', 'download', 'add', 'seed'].indexOf(command) !== -1 && argv._.length !== 2) {
+if (['info', 'create', 'download', 'add', 'seed'].indexOf(command) !== -1 && argv._.length === 1) {
   runHelp()
 } else if (command === 'help' || argv.help) {
   runHelp()
 } else if (command === 'version' || argv.version) {
   runVersion()
 } else if (command === 'info') {
-  runInfo(/* torrentId */ argv._[1])
+  if (argv._.length !== 2) {
+    runHelp()
+  } else {
+    let torrentId = argv._[1]
+    runInfo(torrentId)
+  }
 } else if (command === 'create') {
-  runCreate(/* input */ argv._[1])
+  if (argv._.length !== 2) {
+    runHelp()
+  } else {
+    let input = argv._[1]
+    runCreate(input)
+  }
 } else if (command === 'download' || command === 'add') {
-  runDownload(/* torrentId */ argv._[1])
+  let torrentIds = argv._.slice(1)
+  if (torrentIds.length > 1) handleMultipleInputs(torrentIds)
+  torrentIds.forEach(function (torrentId) {
+    runDownload(torrentId)
+  })
 } else if (command === 'seed') {
-  runSeed(/* input */ argv._[1])
+  let inputs = argv._.slice(1)
+  if (inputs.length > 1) handleMultipleInputs(inputs)
+  inputs.forEach(function (input) {
+    runSeed(input)
+  })
 } else if (command) {
   // assume command is "download" when not specified
-  runDownload(/* torrentId */ command)
+  let torrentIds = argv._
+  if (torrentIds.length > 1) handleMultipleInputs(torrentIds)
+  torrentIds.forEach(function (torrentId) {
+    runDownload(torrentId)
+  })
 } else {
   runHelp()
+}
+
+function handleMultipleInputs (inputs) {
+  // These arguments do not make sense when downloading multiple torrents, or
+  // seeding multiple files/folders.
+  let invalidArguments = [
+    'airplay', 'chromecast', 'dlna', 'mplayer', 'mpv', 'omx', 'vlc', 'xbmc',
+    'stdout', 'select', 'subtitles'
+  ]
+
+  invalidArguments.forEach(function (arg) {
+    if (argv[arg]) {
+      errorAndExit(new Error(
+        'The --' + arg + ' argument cannot be used with multiple files/folders.'
+      ))
+    }
+  })
+
+  enableQuiet()
 }
 
 function runVersion () {
@@ -186,10 +231,10 @@ Example:
     webtorrent download "magnet:..." --vlc
 
 Commands:
-    download <torrent-id>   Download a torrent
-    seed <file/folder>      Seed a file or folder
-    create <file>           Create a .torrent file
-    info <torrent-id>       Show info for a .torrent file or magnet uri
+    download <torrent-id...>  Download a torrent
+    seed <file/folder...>     Seed a file or folder
+    create <file/folder>      Create a .torrent file
+    info <torrent-id>         Show info for a .torrent file or magnet uri
 
 Specify <torrent-id> as one of:
     * magnet uri
@@ -198,31 +243,31 @@ Specify <torrent-id> as one of:
     * info hash (hex string)
 
 Options (streaming):
-    --airplay               Apple TV
-    --chromecast            Chromecast
-    --dlna                  DLNA
-    --mplayer               MPlayer
-    --mpv                   MPV
-    --omx [jack]            omx [default: hdmi]
-    --vlc                   VLC
-    --xbmc                  XBMC
-    --stdout                standard out (implies --quiet)
+    --airplay                 Apple TV
+    --chromecast              Chromecast
+    --dlna                    DLNA
+    --mplayer                 MPlayer
+    --mpv                     MPV
+    --omx [jack]              omx [default: hdmi]
+    --vlc                     VLC
+    --xbmc                    XBMC
+    --stdout                  standard out (implies --quiet)
 
 Options (simple):
-    -o, --out [path]        set download destination [default: current directory]
-    -s, --select [index]    select specific file in torrent (omit index for file list)
-    -t, --subtitles [path]  load subtitles file
-    -v, --version           print the current version
+    -o, --out [path]          set download destination [default: current directory]
+    -s, --select [index]      select specific file in torrent (omit index for file list)
+    -t, --subtitles [path]    load subtitles file
+    -v, --version             print the current version
 
 Options (advanced):
-    -p, --port [number]     change the http server port [default: 8000]
-    -b, --blocklist [path]  load blocklist file/http url
-    -a, --announce [url]    tracker URL to announce to
-    -q, --quiet             don't show UI on stdout
-    --keep-seeding          don't quit when done downloading
-    --on-done [script]      run script after torrent download is done
-    --on-exit [script]      run script before program exit
-    --verbose               show torrent protocol details
+    -p, --port [number]       change the http server port [default: 8000]
+    -b, --blocklist [path]    load blocklist file/http url
+    -a, --announce [url]      tracker URL to announce to
+    -q, --quiet               don't show UI on stdout
+    --keep-seeding            don't quit when done downloading
+    --on-done [script]        run script after torrent download is done
+    --on-exit [script]        run script before program exit
+    --verbose                 show torrent protocol details
 
   */
   }.toString().split(/\n/).slice(2, -2).join('\n'))
@@ -284,6 +329,10 @@ function runDownload (torrentId) {
   var torrent = client.add(torrentId, { path: argv.out, announce: argv.announce })
 
   torrent.on('infoHash', function () {
+    if (argv.quiet) return
+    updateMetadata()
+    torrent.on('wire', updateMetadata)
+
     function updateMetadata () {
       clivas.clear()
       clivas.line(
@@ -292,14 +341,10 @@ function runDownload (torrentId) {
       )
     }
 
-    if (!argv.quiet) {
-      updateMetadata()
-      torrent.on('wire', updateMetadata)
-      torrent.on('metadata', function () {
-        clivas.clear()
-        torrent.removeListener('wire', updateMetadata)
-      })
-    }
+    torrent.on('metadata', function () {
+      clivas.clear()
+      torrent.removeListener('wire', updateMetadata)
+    })
   })
 
   torrent.on('verifying', function (data) {
