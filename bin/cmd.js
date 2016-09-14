@@ -168,31 +168,44 @@ if (['info', 'create', 'download', 'add', 'seed'].indexOf(command) !== -1 && arg
   }
 } else if (command === 'download' || command === 'add') {
   let torrentIds = argv._.slice(1)
-  if (torrentIds.length > 1) {
-    enableQuiet()
-  }
+  if (torrentIds.length > 1) handleMultipleInputs(torrentIds)
   torrentIds.forEach(function (torrentId) {
     runDownload(torrentId)
   })
 } else if (command === 'seed') {
   let inputs = argv._.slice(1)
-  if (inputs.length > 1) {
-    enableQuiet()
-  }
+  if (inputs.length > 1) handleMultipleInputs(inputs)
   inputs.forEach(function (input) {
     runSeed(input)
   })
 } else if (command) {
   // assume command is "download" when not specified
   let torrentIds = argv._
-  if (torrentIds.length > 1) {
-    enableQuiet()
-  }
+  if (torrentIds.length > 1) handleMultipleInputs(torrentIds)
   torrentIds.forEach(function (torrentId) {
     runDownload(torrentId)
   })
 } else {
   runHelp()
+}
+
+function handleMultipleInputs (inputs) {
+  // These arguments do not make sense when downloading multiple torrents, or
+  // seeding multiple files/folders.
+  let invalidArguments = [
+    'airplay', 'chromecast', 'dlna', 'mplayer', 'mpv', 'omx', 'vlc', 'xbmc',
+    'stdout', 'select', 'subtitles'
+  ]
+
+  invalidArguments.forEach(function (arg) {
+    if (argv[arg]) {
+      errorAndExit(new Error(
+        'The --' + arg + ' argument cannot be used with multiple files/folders.'
+      ))
+    }
+  })
+
+  enableQuiet()
 }
 
 function runVersion () {
