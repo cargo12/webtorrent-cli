@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict'
 
 var clivas = require('clivas')
 var cp = require('child_process')
