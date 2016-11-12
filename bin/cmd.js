@@ -562,7 +562,9 @@ function drawTorrent (torrent) {
     var linesRemaining = clivas.height
     var peerslisted = 0
     var speed = torrent.downloadSpeed
-    var estimate = moment.duration(torrent.timeRemaining / 1000, 'seconds').humanize()
+    var estimate = torrent.timeRemaining ? moment.duration(torrent.timeRemaining / 1000, 'seconds').humanize() : 'N/A'
+    var runtimeSeconds = getRuntime()
+    var runtime = runtimeSeconds > 300 ? moment.duration(getRuntime(), 'seconds').humanize() : runtimeSeconds + ' seconds'
 
     clivas.clear()
 
@@ -588,7 +590,7 @@ function drawTorrent (torrent) {
       '{green:Uploaded:} {bold:' + prettierBytes(torrent.uploaded) + '}'
     )
     line(
-      '{green:Running time:} {bold:' + getRuntime() + 's}  ' +
+      '{green:Running time:} {bold:' + runtime + '}  ' +
       '{green:Time remaining:} {bold:' + estimate + '}  ' +
       '{green:Peers:} {bold:' + unchoked.length + '/' + torrent.numPeers + '}'
     )
