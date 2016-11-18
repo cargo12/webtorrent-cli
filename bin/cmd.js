@@ -57,6 +57,7 @@ var argv = minimist(process.argv.slice(2), {
     'chromecast',
     'mplayer',
     'mpv',
+    'not-on-top',
     'vlc',
     'xbmc',
     'stdout',
@@ -91,12 +92,12 @@ function getRuntime () {
   return Math.floor((Date.now() - started) / 1000)
 }
 
-var VLC_ARGS = '--play-and-exit --video-on-top --quiet'
+var VLC_ARGS = '--play-and-exit --quiet'
 if (process.env.DEBUG) {
   VLC_ARGS += ' --extraintf=http:logger --verbose=2 --file-logging --logfile=vlc-log.txt'
 }
-var MPLAYER_EXEC = 'mplayer -ontop -really-quiet -noidx -loop 0'
-var MPV_EXEC = 'mpv --ontop --really-quiet --loop=no'
+var MPLAYER_EXEC = 'mplayer -really-quiet -noidx -loop 0'
+var MPV_EXEC = 'mpv --really-quiet --loop=no'
 var OMX_EXEC = 'lxterminal -e omxplayer -r -o ' + (typeof argv.omx === 'string' ? argv.omx : 'hdmi')
 
 var subtitlesServer
@@ -112,6 +113,12 @@ if (argv.subtitles) {
       showDir: false
     })
   )
+}
+
+if (!argv['not-on-top']) {
+  VLC_ARGS += ' --video-on-top'
+  MPLAYER_EXEC += ' -ontop'
+  MPV_EXEC += ' --ontop'
 }
 
 function checkPermission (filename) {
@@ -254,6 +261,7 @@ Options (streaming):
     --stdout                  standard out (implies --quiet)
 
 Options (simple):
+    --not-on-top              do not player on top
     -o, --out [path]          set download destination [default: current directory]
     -s, --select [index]      select specific file in torrent (omit index for file list)
     -t, --subtitles [path]    load subtitles file
