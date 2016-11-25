@@ -594,7 +594,7 @@ function drawTorrent (torrent) {
     )
     if (argv.verbose) {
       line(
-        '{green:Queued peers:} {bold:' + torrent.numQueued + '}  ' +
+        '{green:Queued peers:} {bold:' + torrent._numQueued + '}  ' +
         '{green:Blocked peers:} {bold:' + blockedPeers + '}  ' +
         '{green:Hotswaps:} {bold:' + hotswaps + '}'
       )
