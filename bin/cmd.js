@@ -261,7 +261,6 @@ Options (streaming):
     --stdout                  standard out (implies --quiet)
 
 Options (simple):
-    --not-on-top              do not player on top
     -o, --out [path]          set download destination [default: current directory]
     -s, --select [index]      select specific file in torrent (omit index for file list)
     -t, --subtitles [path]    load subtitles file
@@ -272,6 +271,7 @@ Options (advanced):
     -b, --blocklist [path]    load blocklist file/http url
     -a, --announce [url]      tracker URL to announce to
     -q, --quiet               don't show UI on stdout
+    --not-on-top              don't set "always on top" option in player
     --keep-seeding            don't quit when done downloading
     --on-done [script]        run script after torrent download is done
     --on-exit [script]        run script before program exit
