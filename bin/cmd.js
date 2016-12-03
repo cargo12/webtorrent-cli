@@ -98,7 +98,7 @@ if (process.env.DEBUG) {
 }
 var MPLAYER_EXEC = 'mplayer -really-quiet -noidx -loop 0'
 var MPV_EXEC = 'mpv --really-quiet --loop=no'
-var OMX_EXEC = 'lxterminal -e omxplayer -r -o ' + (typeof argv.omx === 'string' ? argv.omx : 'hdmi')
+var OMX_EXEC = 'lxterminal -e omxplayer -r --timeout 60 --no-ghost-box --align center -o ' + (typeof argv.omx === 'string' ? argv.omx : 'hdmi')
 
 var subtitlesServer
 if (argv.subtitles) {
