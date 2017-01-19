@@ -434,36 +434,35 @@ function runDownload (torrentId) {
     if (playerName) torrent.files[index].select()
     if (argv.stdout) torrent.files[index].createReadStream().pipe(process.stdout)
 
-    var cmd
     if (argv.vlc) {
-      vlcCommand(function (err, cmd) {
+      vlcCommand(function (err, vlcCmd) {
         if (err) return fatalError(err)
         if (process.platform === 'win32') {
-          var args = [].concat(href, VLC_ARGS.split(' '))
-          unref(cp.execFile(cmd, args, function (err) {
-            if (err) return fatalError(err)
-            torrentDone()
-          }).on('exit', gracefulExit))
+          openVLCWin32(vlcCommand)
         } else {
-          unref(cp.exec(cmd + ' ' + href + ' ' + VLC_ARGS, function (err) {
-            if (err) return fatalError(err)
-            torrentDone()
-          }).on('exit', gracefulExit))
+          openPlayer(vlcCmd + ' ' + href + ' ' + VLC_ARGS)
         }
       })
     } else if (argv.mplayer) {
-      cmd = MPLAYER_EXEC + ' ' + href
+      openPlayer(MPLAYER_EXEC + ' ' + href)
     } else if (argv.mpv) {
-      cmd = MPV_EXEC + ' ' + href
+      openPlayer(MPV_EXEC + ' ' + href)
     } else if (argv.omx) {
-      cmd = OMX_EXEC + ' ' + href
+      openPlayer(OMX_EXEC + ' ' + href)
     }
 
-    if (cmd) {
+    function openPlayer (cmd) {
       unref(cp.exec(cmd, function (err) {
         if (err) return fatalError(err)
-        torrentDone()
       }).on('exit', gracefulExit))
+    }
+
+    function openVLCWin32 (vlcCommand) {
+      var args = [].concat(href, VLC_ARGS.split(' '))
+      unref(cp.execFile(vlcCommand, args, function (err) {
+        if (err) return fatalError(err)
+      }).on('exit', gracefulExit))
+      return
     }
 
     if (argv.airplay) {
