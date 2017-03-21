@@ -10,22 +10,11 @@
 <h4 align="center">The streaming torrent client. For the command line.</h4>
 
 <p align="center">
-    <a href="https://gitter.im/feross/webtorrent-cli">
-        <img src="https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg"
-             alt="Gitter">
-    </a>
-    <a href="https://travis-ci.org/feross/webtorrent-cli">
-        <img src="https://img.shields.io/travis/feross/webtorrent-cli/master.svg"
-             alt="Travis Build">
-    </a>
-    <a href="https://npmjs.com/package/webtorrent-cli">
-        <img src="https://img.shields.io/npm/v/webtorrent-cli.svg"
-             alt="NPM Version">
-    </a>
-    <a href="https://npmjs.org/package/webtorrent-cli">
-        <img src="https://img.shields.io/npm/dm/webtorrent-cli.svg"
-             alt="NPM Downloads">
-    </a>
+    <a href="https://gitter.im/feross/webtorrent-cli"><img src="https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg" alt="gitter"></a>
+    <a href="https://travis-ci.org/feross/webtorrent-cli"><img src="https://img.shields.io/travis/feross/webtorrent-cli/master.svg" alt="travis"></a>
+    <a href="https://npmjs.com/package/webtorrent-cli"><img src="https://img.shields.io/npm/v/webtorrent-cli.svg" alt="npm version"></a>
+    <a href="https://npmjs.org/package/webtorrent-cli"><img src="https://img.shields.io/npm/dm/webtorrent-cli.svg" alt="npm downloads"></a>
+    <a href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="javascript style guide"></a>
 </p>
 <br>
 
