@@ -1,7 +1,7 @@
 {
   "name": "webtorrent-cli",
   "description": "WebTorrent, the streaming torrent client. For the command line.",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "author": {
     "name": "WebTorrent, LLC",
     "email": "feross@webtorrent.io",
