@@ -141,7 +141,7 @@ if (argv['on-exit']) {
   argv['on-exit'] = fs.realpathSync(argv['on-exit'])
 }
 
-playerName = argv.airplay ? 'Airplay'
+var playerName = argv.airplay ? 'Airplay'
   : argv.chromecast ? 'Chromecast'
   : argv.dlna ? 'DLNA'
   : argv.mplayer ? 'MPlayer'
@@ -324,7 +324,7 @@ function runCreate (input) {
   })
 }
 
-var client, href, playerName, server, serving
+var client, href, server, serving
 
 function runDownload (torrentId) {
   if (!argv.out && !argv.stdout && !playerName) {
@@ -462,7 +462,6 @@ function runDownload (torrentId) {
       unref(cp.execFile(vlcCommand, args, function (err) {
         if (err) return fatalError(err)
       }).on('exit', gracefulExit))
-      return
     }
 
     if (argv.airplay) {
@@ -547,7 +546,7 @@ function runSeed (input) {
 var drawInterval
 function drawTorrent (torrent) {
   if (!argv.quiet) {
-    process.stdout.write(new Buffer('G1tIG1sySg==', 'base64')) // clear for drawing
+    process.stdout.write(Buffer.from('G1tIG1sySg==', 'base64')) // clear for drawing
     drawInterval = setInterval(draw, 1000)
     unref(drawInterval)
   }
@@ -572,6 +571,7 @@ function drawTorrent (torrent) {
     var estimate = torrent.timeRemaining ? moment.duration(torrent.timeRemaining / 1000, 'seconds').humanize() : 'N/A'
     var runtimeSeconds = getRuntime()
     var runtime = runtimeSeconds > 300 ? moment.duration(getRuntime(), 'seconds').humanize() : runtimeSeconds + ' seconds'
+    var seeding = torrent.done
 
     clivas.clear()
 
@@ -579,7 +579,6 @@ function drawTorrent (torrent) {
       '{green:' + (seeding ? 'Seeding' : 'Downloading') + ': }' +
       '{bold:' + torrent.name + '}'
     )
-    var seeding = torrent.done
     if (seeding) line('{green:Info hash: }' + torrent.infoHash)
     if (playerName) {
       line(

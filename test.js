@@ -92,7 +92,7 @@ test('Command line: webtorrent create /path/to/file', function (t) {
   })
   child.stdout.on('end', function () {
     var buf = Buffer.concat(chunks)
-    var parsedTorrent = parseTorrent(new Buffer(buf, 'binary'))
+    var parsedTorrent = parseTorrent(Buffer.from(buf, 'binary'))
     t.deepEqual(parsedTorrent.infoHash, 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36')
   })
 })
