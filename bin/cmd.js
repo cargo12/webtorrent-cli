@@ -352,17 +352,10 @@ function runDownload (torrentId) {
     torrent.on('metadata', function () {
       clivas.clear()
       torrent.removeListener('wire', updateMetadata)
-    })
-  })
 
-  torrent.on('verifying', function (data) {
-    if (argv.quiet) return
-    clivas.clear()
-    clivas.line(
-      '{green:verifying existing torrent} {bold:%s%} ({bold:%s%} {green:verified})',
-      Math.floor(data.percentDone),
-      Math.floor(data.percentVerified)
-    )
+      clivas.clear()
+      clivas.line('{green:verifying existing torrent data...}')
+    })
   })
 
   torrent.on('done', function () {
