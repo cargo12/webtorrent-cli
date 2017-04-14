@@ -63,6 +63,7 @@ var argv = minimist(process.argv.slice(2), {
     'stdout',
     'quiet',
     'keep-seeding',
+    'quit',
     'help',
     'version',
     'verbose'
@@ -76,7 +77,8 @@ var argv = minimist(process.argv.slice(2), {
     'on-exit'
   ],
   default: {
-    port: 8000
+    port: 8000,
+    quit: true
   }
 })
 
@@ -273,6 +275,7 @@ Options (advanced):
     -q, --quiet               don't show UI on stdout
     --not-on-top              don't set "always on top" option in player
     --keep-seeding            don't quit when done downloading
+    --no-quit                 don't quit when player exits
     --on-done [script]        run script after torrent download is done
     --on-exit [script]        run script before program exit
     --verbose                 show torrent protocol details
@@ -447,14 +450,20 @@ function runDownload (torrentId) {
     function openPlayer (cmd) {
       unref(cp.exec(cmd, function (err) {
         if (err) return fatalError(err)
-      }).on('exit', gracefulExit))
+      }).on('exit', playerExit))
     }
 
     function openVLCWin32 (vlcCommand) {
       var args = [].concat(href, VLC_ARGS.split(' '))
       unref(cp.execFile(vlcCommand, args, function (err) {
         if (err) return fatalError(err)
-      }).on('exit', gracefulExit))
+      }).on('exit', playerExit))
+    }
+
+    function playerExit () {
+      if (argv['quit']) {
+        gracefulExit()
+      }
     }
 
     if (argv.airplay) {
