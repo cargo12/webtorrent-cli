@@ -11,7 +11,7 @@
     "webtorrent": "./bin/cmd.js"
   },
   "bugs": {
-    "url": "https://github.com/feross/webtorrent-cli/issues"
+    "url": "https://github.com/webtorrent/webtorrent-cli/issues"
   },
   "dependencies": {
     "clivas": "^0.2.0",
@@ -61,7 +61,7 @@
   "preferGlobal": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/feross/webtorrent-cli.git"
+    "url": "git://github.com/webtorrent/webtorrent-cli.git"
   },
   "scripts": {
     "test": "standard && tape test.js",

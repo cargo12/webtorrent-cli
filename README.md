@@ -10,8 +10,7 @@
 <h4 align="center">The streaming torrent client. For the command line.</h4>
 
 <p align="center">
-    <a href="https://gitter.im/feross/webtorrent-cli"><img src="https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg" alt="gitter"></a>
-    <a href="https://travis-ci.org/feross/webtorrent-cli"><img src="https://img.shields.io/travis/feross/webtorrent-cli/master.svg" alt="travis"></a>
+    <a href="https://travis-ci.org/webtorrent/webtorrent-cli"><img src="https://img.shields.io/travis/webtorrent/webtorrent-cli/master.svg" alt="travis"></a>
     <a href="https://npmjs.com/package/webtorrent-cli"><img src="https://img.shields.io/npm/v/webtorrent-cli.svg" alt="npm version"></a>
     <a href="https://npmjs.org/package/webtorrent-cli"><img src="https://img.shields.io/npm/dm/webtorrent-cli.svg" alt="npm downloads"></a>
     <a href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="javascript style guide"></a>
@@ -25,10 +24,10 @@ i.e. *THIS PACKAGE*, is for using WebTorrent from the **command line**.
 uses TCP and UDP to talk to other torrent clients.
 
 **NOTE**: To connect to "web peers" (browsers) in addition to normal BitTorrent peers, use
-[`webtorrent-hybrid`](https://github.com/feross/webtorrent-hybrid) which includes WebRTC
+[`webtorrent-hybrid`](https://www.npmjs.com/package/webtorrent-hybrid) which includes WebRTC
 support for node.
 
-To use WebTorrent in the browser, see [`webtorrent`](https://github.com/feross/webtorrent).
+To use WebTorrent in the browser, see [`webtorrent`](https://www.npmjs.com/package/webtorrent).
 
 ### Features
 
@@ -40,11 +39,11 @@ To use WebTorrent in the browser, see [`webtorrent`](https://github.com/feross/w
   - Fetches pieces from the network on-demand so seeking is supported (even before torrent is finished)
   - Seamlessly switches between sequential and rarest-first piece selection strategy
 - Supports advanced torrent client features
-  - **magnet uri** support via **[ut_metadata](https://github.com/feross/ut_metadata)**
-  - **peer discovery** via **[dht](https://github.com/feross/bittorrent-dht)**,
-    **[tracker](https://github.com/feross/bittorrent-tracker)**, and
-    **[ut_pex](https://github.com/fisch0920/ut_pex)**
-  - **[protocol extension api](https://github.com/feross/bittorrent-protocol#extension-api)**
+  - **magnet uri** support via **[ut_metadata](https://www.npmjs.com/package/ut_metadata)**
+  - **peer discovery** via **[dht](https://www.npmjs.com/package/bittorrent-dht)**,
+    **[tracker](https://www.npmjs.com/package/bittorrent-tracker)**, and
+    **[ut_pex](https://www.npmjs.com/package/ut_pex)**
+  - **[protocol extension api](https://www.npmjs.com/package/bittorrent-protocol#extension-api)**
     for adding new extensions
 
 ### Install
@@ -123,12 +122,10 @@ In addition to magnet uris, webtorrent supports many ways to specify a torrent:
 - magnet uri (string)
 - torrent file (buffer)
 - info hash (hex string or buffer)
-- parsed torrent (from [parse-torrent](https://github.com/feross/parse-torrent))
+- parsed torrent (from [parse-torrent](https://www.npmjs.com/package/parse-torrent))
 - http/https url to a torrent file (string)
 - filesystem path to a torrent file (string)
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
-
 ### License
 
-MIT. Copyright (c) [WebTorrent, LLC](https://webtorrent.io).
+MIT. Copyright (c) [Feross Aboukhadijeh](https://feross.org) and [WebTorrent, LLC](https://webtorrent.io).
