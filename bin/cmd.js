@@ -434,7 +434,7 @@ function runDownload (torrentId) {
       vlcCommand(function (err, vlcCmd) {
         if (err) return fatalError(err)
         if (process.platform === 'win32') {
-          openVLCWin32(vlcCommand)
+          openVLCWin32(vlcCmd)
         } else {
           openPlayer(vlcCmd + ' ' + href + ' ' + VLC_ARGS)
         }
