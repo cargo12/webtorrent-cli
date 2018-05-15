@@ -38,6 +38,8 @@ process.on('exit', function (code) {
   )
 })
 
+var gracefullyExiting = false
+
 process.on('SIGINT', gracefulExit)
 process.on('SIGTERM', gracefulExit)
 
@@ -685,6 +687,9 @@ function errorAndExit (err) {
 }
 
 function gracefulExit () {
+  if (gracefullyExiting) return
+  gracefullyExiting = true
+
   process.removeListener('SIGINT', gracefulExit)
   process.removeListener('SIGTERM', gracefulExit)
 
